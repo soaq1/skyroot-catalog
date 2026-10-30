@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>SKYROOT 기계 도감</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: a parts catalogue. Hazard-taped header, one filter rail, spec-sheet cards. */
+:root{
+  --bg:#e9ecee; --panel:#fafbfb; --ink:#1b2026; --muted:#59626c; --line:#d0d6da; --chip:#e1e5e8;
+  --hazard:#f2c21c; --hazard-dark:#1b2026;
+  --heat:#d9601a; --extract:#c98c10; --power:#c93d32; --fluid:#0c8c81; --bio:#35953b; --assemble:#76982a; --utility:#23977d;
+  --display:"Black Han Sans","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b; --panel:#1d2126; --ink:#e9edf0; --muted:#9aa4ae; --line:#30363d; --chip:#2a2f35; --hazard-dark:#14171b;
+  --heat:#f0853f; --extract:#e6b23a; --power:#ee6a5e; --fluid:#3cc4b7; --bio:#62c768; --assemble:#a9cc55; --utility:#55cfae; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1d2126; --ink:#e9edf0; --muted:#9aa4ae; --line:#30363d; --chip:#2a2f35; --hazard-dark:#14171b;
+  --heat:#f0853f; --extract:#e6b23a; --power:#ee6a5e; --fluid:#3cc4b7; --bio:#62c768; --assemble:#a9cc55; --utility:#55cfae; color-scheme:dark}
+*{box-sizing:border-box}
+html{color-scheme:light}
+body{margin:0}
+img{max-width:100%}
+[hidden]{display:none!important}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 56px}
+.tape{height:12px;background:repeating-linear-gradient(135deg,var(--hazard) 0 18px,var(--hazard-dark) 18px 36px)}
+header{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;align-items:end;padding-block:28px 22px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,60px);line-height:1.05;margin:0 0 12px;text-wrap:balance}
+.lede{margin:0;color:var(--muted);max-width:44ch}
+.hero{margin:0;min-width:0}
+.hero img{display:block;width:100%;aspect-ratio:16/8;object-fit:cover;object-position:50% 40%}
+.legend{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:12px 0 0}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding-block:12px;border-block:1px solid var(--line)}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--bg)}
+.rail button{font:500 13.5px var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);padding:6px 12px;cursor:pointer;display:inline-flex;gap:7px;align-items:center}
+.rail button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.rail button:focus-visible,.shot:focus-visible,select:focus-visible{outline:2px solid var(--hazard);outline-offset:2px}
+.dot{width:10px;height:10px;display:inline-block;background:var(--c)}
+.sort{margin-left:auto;display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted)}
+select{font:500 13.5px var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:6px 8px}
+.count{font-family:var(--mono);font-size:12.5px;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px;padding-block:20px 0}
+article{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c);display:flex;flex-direction:column;min-width:0}
+.shot{all:unset;display:block;cursor:zoom-in;position:relative}
+.shot img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+.flag{position:absolute;left:0;bottom:0;background:var(--hazard);color:#1b2026;font:500 12px var(--body);padding:3px 9px}
+.info{padding:12px 14px 14px;display:flex;flex-direction:column;gap:10px;flex:1}
+.head{display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+h2{font-size:18px;font-weight:700;margin:0;line-height:1.25}
+.en{font-family:var(--mono);font-size:12px;color:var(--muted);display:block;font-weight:400}
+.fam{font-size:12.5px;color:var(--c);font-weight:700;white-space:nowrap}
+dl{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:2px 10px;margin:0;font-variant-numeric:tabular-nums}
+dt{font-size:11.5px;color:var(--muted);letter-spacing:.02em}
+dd{margin:0;font-family:var(--mono);font-size:14px}
+.makes{margin:0;font-size:13.5px;color:var(--muted)}
+.score{margin-top:auto;display:grid;grid-template-columns:auto minmax(0,1fr) 2.6em;gap:4px 8px;align-items:center;font-size:12px;color:var(--muted)}
+.bar{height:6px;background:var(--chip)}
+.bar i{display:block;height:100%;background:var(--c)}
+.score b{font-family:var(--mono);font-weight:500;color:var(--ink);text-align:right}
+dialog{border:0;padding:0;background:var(--panel);color:var(--ink);max-width:min(1200px,94vw)}
+dialog::backdrop{background:rgba(10,12,15,.78)}
+dialog img{display:block;width:100%;height:auto;max-height:80vh;object-fit:contain}
+.cap{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:10px 14px}
+.cap button{font:500 13.5px var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);padding:5px 12px;cursor:pointer}
+@media (max-width:760px){header{grid-template-columns:minmax(0,1fr)}.sort{margin-left:0}}
+</style>
+</head>
+<body>
+
+<div class="tape"></div>
+<div class="wrap">
+<header>
+  <div>
+    <h1>SKYROOT<br>기계 도감</h1>
+    <p class="lede">하늘섬 공장 게임 SKYROOT의 v4.2 기계들이에요. 다듬기가 어느 정도 끝난 26종을 모았어요. 사진을 누르면 크게 볼 수 있어요.</p>
+  </div>
+  <figure class="hero"><img src="img/hero.jpg" alt="다듬은 기계들을 벨트로 이어 놓은 공장 구역"></figure>
+</header>
+<p class="legend">점수는 비평 에이전트가 Modulus를 10으로 놓고 매겼어요. 사진과 점수는 모두 1차 비평 시점 기준이고, 지금은 수정이 더 진행 중이에요. 차가운 색 12종과 물류 12종은 아직 작업 전이라 빠져 있어요.</p>
+<div class="rail" id="rail" role="group" aria-label="계열 필터"></div>
+<section class="grid" id="grid" aria-live="polite"></section>
+</div>
+<dialog id="dlg"><img id="dlgImg" alt=""><div class="cap"><span id="dlgCap"></span><button id="dlgClose" type="button">닫기</button></div></dialog>
+<script>
+const M = [{"id": "smelter", "ko": "제련로", "en": "Smelter", "fam": "heat", "famko": "가열", "verb": "녹인다", "size": [2, 2], "h": 4.5, "power": 6, "makes": ["구리 주괴", "잿불 주괴", "철 주괴", "유물 합금"], "score": [5.5, 5], "golden": true}, {"id": "kiln", "ko": "가마", "en": "Kiln", "fam": "heat", "famko": "가열", "verb": "굽는다", "size": [2, 2], "h": 4.5, "power": 6, "makes": ["생체 세라믹", "벽돌", "석영유리"], "score": [6.5, 6], "golden": false}, {"id": "foundry", "ko": "주조소", "en": "Foundry", "fam": "heat", "famko": "가열", "verb": "합금한다", "size": [3, 2], "h": 4.625, "power": 16, "makes": ["잿불 합금", "강철 주괴"], "score": [7, 6.5], "golden": false}, {"id": "burner", "ko": "바이오 연소로", "en": "Biomass Burner", "fam": "heat", "famko": "가열", "verb": "태운다", "size": [2, 2], "h": 4.5, "power": -25, "makes": [], "score": [6, 5], "golden": false}, {"id": "geothermal", "ko": "지열 발전소", "en": "Geothermal Plant", "fam": "heat", "famko": "가열", "verb": "땅 열을 쓴다", "size": [3, 3], "h": 5.8125, "power": -120, "makes": [], "score": [6.5, 5], "golden": false}, {"id": "miner", "ko": "채굴기", "en": "Miner", "fam": "extract", "famko": "채집", "verb": "캔다", "size": [2, 2], "h": 6.9062, "power": 8, "makes": ["현무암", "석탄", "구리광석", "잿불석"], "score": [7, 6], "golden": false}, {"id": "woodcutter", "ko": "벌목기", "en": "Woodcutter", "fam": "extract", "famko": "채집", "verb": "벤다", "size": [2, 2], "h": 4.25, "power": 6, "makes": ["심재목", "목재"], "score": [6.5, 5.5], "golden": false}, {"id": "pump", "ko": "펌프", "en": "Pump", "fam": "extract", "famko": "채집", "verb": "퍼올린다", "size": [2, 2], "h": 2.6875, "power": 10, "makes": ["염수", "늪밀랍", "물"], "score": [5.5, 4.5], "golden": false}, {"id": "essence_extractor", "ko": "정수 추출기", "en": "Essence Extractor", "fam": "extract", "famko": "채집", "verb": "뽑아낸다", "size": [3, 3], "h": 6.4375, "power": 20, "makes": ["서리유리", "프리즘 석영", "원시 루멘", "하늘산호"], "score": [7.5, 6.5], "golden": false}, {"id": "windmill", "ko": "풍차", "en": "Windmill", "fam": "power", "famko": "전력", "verb": "바람을 모은다", "size": [2, 2], "h": 9.4062, "power": -15, "makes": [], "score": [5.5, 4.5], "golden": false}, {"id": "waterwheel", "ko": "수차", "en": "Water Wheel", "fam": "power", "famko": "전력", "verb": "물을 돌린다", "size": [2, 2], "h": 2.75, "power": -30, "makes": [], "score": [5.5, 4], "golden": false}, {"id": "solar_array", "ko": "태양광 판", "en": "Solar Array", "fam": "power", "famko": "전력", "verb": "햇빛을 모은다", "size": [2, 2], "h": 2.0, "power": -20, "makes": [], "score": [6, 5.5], "golden": false}, {"id": "pylon", "ko": "전선 기둥", "en": "Power Pylon", "fam": "power", "famko": "전력", "verb": "전기를 잇는다", "size": [1, 1], "h": 4.6875, "power": 0, "makes": [], "score": [6.5, 6], "golden": false}, {"id": "distiller", "ko": "증류기", "en": "Distiller", "fam": "fluid", "famko": "액체", "verb": "증류한다", "size": [2, 2], "h": 4.75, "power": 10, "makes": ["황혼 추출액", "심재 수지", "루멘 잉크", "정제 밀랍"], "score": [6, 5.5], "golden": true}, {"id": "centrifuge", "ko": "원심분리기", "en": "Centrifuge", "fam": "fluid", "famko": "액체", "verb": "가른다", "size": [2, 2], "h": 2.25, "power": 14, "makes": ["소금결정"], "score": [6, 5.5], "golden": false}, {"id": "mixer", "ko": "혼합기", "en": "Mixer", "fam": "fluid", "famko": "액체", "verb": "섞는다", "size": [2, 2], "h": 4.5938, "power": 8, "makes": ["콘크리트", "냉각액", "황혼 영약", "진주 유약"], "score": [5.5, 6], "golden": false}, {"id": "sink", "ko": "뿌리 퇴비통", "en": "Root Compost", "fam": "fluid", "famko": "액체", "verb": "거름으로 돌린다", "size": [2, 2], "h": 2.0, "power": 5, "makes": [], "score": [6, 6], "golden": false}, {"id": "bioreactor", "ko": "배양기", "en": "Bioreactor", "fam": "bio", "famko": "생물", "verb": "키운다", "size": [3, 2], "h": 3.8438, "power": 10, "makes": ["빛버섯 배양액", "균사 매트"], "score": [5.5, 5.5], "golden": true}, {"id": "harvester", "ko": "수확기", "en": "Harvester", "fam": "bio", "famko": "생물", "verb": "거둔다", "size": [2, 2], "h": 2.25, "power": 6, "makes": ["구름솜", "황혼꽃", "섬유잎", "빛버섯"], "score": [6.5, 6.5], "golden": false}, {"id": "assembler", "ko": "조립기", "en": "Assembler", "fam": "assemble", "famko": "조립", "verb": "조립한다", "size": [3, 2], "h": 3.0, "power": 10, "makes": ["에어로겔 패드", "빈 인장", "복합 들보", "부양 코일"], "score": [6, 6], "golden": false}, {"id": "fabricator", "ko": "정밀 제작기", "en": "Fabricator", "fam": "assemble", "famko": "조립", "verb": "정밀 제작한다", "size": [3, 3], "h": 3.375, "power": 20, "makes": ["제어판"], "score": [7, 6.5], "golden": false}, {"id": "seal_press", "ko": "인장 압인기", "en": "Seal Press", "fam": "assemble", "famko": "조립", "verb": "새긴다", "size": [3, 3], "h": 4.7812, "power": 25, "makes": ["심연의 핵 인장", "현무 계단 인장", "황토 협곡 인장", "폭포 계단 인장"], "score": [7, 6.5], "golden": false}, {"id": "heart_assembler", "ko": "심장 조립기", "en": "Heart Assembler", "fam": "assemble", "famko": "조립", "verb": "엮어 합친다", "size": [4, 4], "h": 9.375, "power": 40, "makes": ["개화 심장", "냉각 심장", "잿불 심장", "루멘 회로"], "score": [6.5, 6], "golden": false}, {"id": "workbench", "ko": "작업대", "en": "Workbench", "fam": "utility", "famko": "보조", "verb": "손으로 만든다", "size": [2, 1], "h": 2.0312, "power": 0, "makes": [], "score": [5, 4.5], "golden": false}, {"id": "skyscope", "ko": "하늘 망원경", "en": "Skyscope", "fam": "utility", "famko": "보조", "verb": "섬을 찾는다", "size": [2, 2], "h": 2.0, "power": 5, "makes": [], "score": [4.5, 4.5], "golden": false}, {"id": "wardlight", "ko": "수호등", "en": "Wardlight", "fam": "utility", "famko": "보조", "verb": "어스름을 쫓는다", "size": [1, 1], "h": 2.3125, "power": 4, "makes": [], "score": [5.5, 5.5], "golden": false}];
+const FAM = [["all","전체"],["heat","가열"],["extract","채집"],["power","전력"],["fluid","액체"],["bio","생물"],["assemble","조립"],["utility","보조"]];
+const rail = document.getElementById("rail"), grid = document.getElementById("grid");
+let fam = "all", sort = "fam";
+for (const [k, ko] of FAM) {
+  const b = document.createElement("button");
+  b.type = "button"; b.dataset.k = k; b.setAttribute("aria-pressed", k === "all");
+  b.innerHTML = (k === "all" ? "" : `<span class="dot" style="--c:var(--${k})"></span>`) + ko;
+  b.onclick = () => { fam = k; rail.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b)); draw(); };
+  rail.append(b);
+}
+const sortBox = document.createElement("label");
+sortBox.className = "sort";
+sortBox.innerHTML = `<span class="count" id="count"></span><span>정렬</span><select id="sortSel"><option value="fam">계열 순</option><option value="score">점수 높은 순</option><option value="tall">높이 순</option></select>`;
+rail.append(sortBox);
+document.getElementById("sortSel").onchange = e => { sort = e.target.value; draw(); };
+const avg = m => m.score ? (m.score[0] + m.score[1]) / 2 : 0;
+function card(m) {
+  const a = document.createElement("article");
+  a.style.setProperty("--c", `var(--${m.fam})`);
+  const s = m.score || [0, 0];
+  a.innerHTML = `<button class="shot" type="button" aria-label="${m.ko} 크게 보기"><img loading="lazy" src="img/${m.id}.jpg" alt="${m.ko}">${m.golden ? '<span class="flag">기준 모델</span>' : ""}</button>
+  <div class="info">
+    <div class="head"><h2>${m.ko}<span class="en">${m.en}</span></h2><span class="fam">${m.famko}</span></div>
+    <dl><div><dt>크기</dt><dd>${m.size[0]}×${m.size[1]}칸</dd></div><div><dt>높이</dt><dd>${m.h.toFixed(1)} m</dd></div><div><dt>전력</dt><dd>${m.power}</dd></div></dl>
+    ${m.makes.length ? `<p class="makes">${m.verb} → ${m.makes.join(", ")}</p>` : `<p class="makes">${m.verb || "설비"}</p>`}
+    <div class="score">
+      <span>게임 카메라</span><span class="bar"><i style="width:${s[0] * 10}%"></i></span><b>${s[0].toFixed(1)}</b>
+      <span>근접</span><span class="bar"><i style="width:${s[1] * 10}%"></i></span><b>${s[1].toFixed(1)}</b>
+    </div>
+  </div>`;
+  a.querySelector(".shot").onclick = () => {
+    const d = document.getElementById("dlg");
+    document.getElementById("dlgImg").src = `img/${m.id}.jpg`;
+    document.getElementById("dlgImg").alt = m.ko;
+    document.getElementById("dlgCap").textContent = `${m.ko} · ${m.en}`;
+    d.showModal();
+  };
+  return a;
+}
+function draw() {
+  let L = M.filter(m => fam === "all" || m.fam === fam);
+  if (sort === "score") L = [...L].sort((a, b) => avg(b) - avg(a));
+  if (sort === "tall") L = [...L].sort((a, b) => b.h - a.h);
+  grid.replaceChildren(...L.map(card));
+  document.getElementById("count").textContent = `${L.length}종`;
+}
+const dlg = document.getElementById("dlg");
+document.getElementById("dlgClose").onclick = () => dlg.close();
+dlg.addEventListener("click", e => { if (e.target === dlg) dlg.close(); });
+draw();
+</script>
+
+</body>
+</html>
