@@ -63,6 +63,10 @@ dd{margin:0;font-family:var(--mono);font-size:14px}
 .logi p{margin:0 0 14px;color:var(--muted)}
 .logi figure{margin:0 0 14px}
 .logi img{display:block;width:100%;height:auto}
+.logigrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:18px}
+.logigrid figure{margin:0;background:var(--panel);border:1px solid var(--line)}
+.logigrid figcaption{padding:10px 12px 12px;font-size:13.5px;color:var(--muted);line-height:1.45}
+.logigrid figcaption b{display:block;color:var(--ink);font-size:15.5px;margin-bottom:3px}
 .score{margin-top:auto;display:grid;grid-template-columns:auto minmax(0,1fr) 2.6em;gap:4px 8px;align-items:center;font-size:12px;color:var(--muted)}
 .bar{height:6px;background:var(--chip)}
 .bar i{display:block;height:100%;background:var(--c)}
@@ -92,7 +96,7 @@ dialog img{display:block;width:100%;height:auto;max-height:82vh;object-fit:conta
 <p class="legend">합격은 직접 보고 고른 기계예요. 점수는 비평 에이전트가 앞뒤 사진을 보고 10점 만점으로 매긴 값이고, 그 지적을 고친 뒤 찍은 사진이라 지금은 더 나을 수 있어요. 게임 0.12.0 기준이에요.</p>
 <div class="rail" id="rail" role="group" aria-label="계열 필터"></div>
 <section class="grid" id="grid" aria-live="polite"></section>
-<section class="logi"><h2>벨트와 물류</h2><p>벨트 3종은 재질로 등급을 구분하고, 분배기 화살표는 실제로 돌아가는 팔로 바꿨어요.</p><figure><img loading="lazy" src="img/logi_noon.jpg" alt="새 벨트와 물류 블록을 게임 카메라로 본 모습"></figure><figure><img loading="lazy" src="img/logi_close.jpg" alt="물류 블록 근접 사진 묶음"></figure></section>
+<section class="logi"><h2>벨트와 물류</h2><p>벨트는 기계를 돋보이게 하도록 다시 다듬었어요. 어두운색은 기계 입구, 흰색은 기계, 노란색은 장치에만 쓰고, 등급은 재질로 구분해요.</p><figure><img loading="lazy" src="img/logi_noon.jpg" alt="벨트와 물류 블록을 깔아 놓은 시험장"></figure><div class="logigrid"><figure><img loading="lazy" src="img/logi_detail_mk1.jpg" alt="컨베이어 벨트 Mk1"><figcaption><b>컨베이어 벨트 Mk1</b>평평한 고무 벨트에 철제 난간. 줄무늬를 없앴어요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_mk2.jpg" alt="컨베이어 벨트 Mk2"><figcaption><b>컨베이어 벨트 Mk2</b>움직이는 강철판과 은은한 호박색 선. 화살표를 뺐어요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_mk3.jpg" alt="컨베이어 벨트 Mk3"><figcaption><b>컨베이어 벨트 Mk3</b>어두운 유리 채널에 빛나는 레일 두 줄.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_turns.jpg" alt="곡선"><figcaption><b>곡선</b>대각선 계단 대신 네모난 고정판을 썼어요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_ramp.jpg" alt="경사로"><figcaption><b>경사로</b>세 등급 모두 언덕을 오르내려요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_splitter.jpg" alt="분배기"><figcaption><b>분배기</b>칠한 화살표 대신 실제로 도는 팔이 출구를 가리켜요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_merger.jpg" alt="합류기"><figcaption><b>합류기</b>여러 벨트를 하나로 모아요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_filter.jpg" alt="필터 분배기"><figcaption><b>필터 분배기</b>유리 머리 안에 고른 아이템이 보여요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_crate.jpg" alt="보관함"><figcaption><b>보관함</b>벨트로 넣고 꺼내요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_lift.jpg" alt="아이템 승강기"><figcaption><b>아이템 승강기</b>유리 통로 안으로 아이템이 올라가요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_deck.jpg" alt="고가 발판"><figcaption><b>고가 발판</b>4 m마다 H형 기둥이 받쳐요.</figcaption></figure></div></section>
 </div>
 <dialog id="dlg"><div class="pair"><figure><img id="dlgImg" alt=""><figcaption>앞면</figcaption></figure><figure><img id="dlgBack" alt=""><figcaption>뒷면</figcaption></figure></div><div class="cap"><span id="dlgCap"></span><button id="dlgClose" type="button">닫기</button></div></dialog>
 <script>
