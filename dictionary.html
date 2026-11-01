@@ -1,0 +1,150 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Factoriature 사전</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: the catalogue's look, as a field glossary with a status mark on every entry. */
+:root{
+  --bg:#e9ecee; --panel:#fafbfb; --ink:#1b2026; --muted:#59626c; --line:#d0d6da; --chip:#e1e5e8;
+  --hazard:#f2c21c; --hazard-dark:#1b2026; --accent:#2d62c4; --live:#35953b; --work:#c98c10; --plan:#66717d;
+  --display:"Black Han Sans","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b; --panel:#1d2126; --ink:#e9edf0; --muted:#9aa4ae; --line:#30363d; --chip:#2a2f35; --hazard-dark:#14171b;
+  --accent:#6f9fee; --live:#62c768; --work:#e6b23a; --plan:#9aa4ae}}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1d2126; --ink:#e9edf0; --muted:#9aa4ae; --line:#30363d; --chip:#2a2f35; --hazard-dark:#14171b;
+  --accent:#6f9fee; --live:#62c768; --work:#e6b23a; --plan:#9aa4ae}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%;scroll-padding-top:70px}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.6}
+a{color:inherit}
+.wrap{max-width:1040px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tape{height:12px;background:repeating-linear-gradient(135deg,var(--hazard) 0 18px,var(--hazard-dark) 18px 36px)}
+header{padding-block:28px 18px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,54px);line-height:1.05;margin:0 0 10px}
+.lede{margin:0;color:var(--muted);max-width:62ch}
+.links{display:flex;flex-wrap:wrap;gap:6px 16px;margin-top:12px}
+.links a{font-weight:700;color:var(--accent);text-decoration:none}
+.links a:hover{text-decoration:underline}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding-block:10px;border-bottom:1px solid var(--line)}
+input{font:500 14px var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:7px 10px;flex:1 1 200px;min-width:0}
+.rail button{font:500 13.5px var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);padding:6px 12px;cursor:pointer}
+.rail button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+:focus-visible{outline:2px solid var(--hazard);outline-offset:2px}
+.count{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-left:auto}
+section{padding-block:22px 4px}
+h2{font-size:21px;margin:0 0 10px;padding-bottom:6px;border-bottom:2px solid var(--ink)}
+.terms{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:10px}
+.term{background:var(--panel);border:1px solid var(--line);padding:12px 14px;min-width:0}
+.term h3{margin:0 0 4px;font-size:16.5px;display:flex;justify-content:space-between;gap:10px;align-items:baseline}
+.term p{margin:0;color:var(--muted);font-size:14px}
+.st{font:500 12px var(--body);white-space:nowrap}
+.st[data-s="게임에 있음"]{color:var(--live)}
+.st[data-s="작업 중"]{color:var(--work)}
+.st[data-s="예정"],.st[data-s="확정"]{color:var(--plan)}
+.tablewrap{overflow-x:auto;background:var(--panel);border:1px solid var(--line)}
+table{border-collapse:collapse;width:100%;font-size:14px;min-width:560px}
+th,td{text-align:left;padding:8px 10px;border-bottom:1px solid var(--line);vertical-align:top}
+th{font-size:12.5px;color:var(--muted);font-weight:700}
+tr:last-child td{border-bottom:0}
+td.num,th.num{text-align:right;font-family:var(--mono);font-variant-numeric:tabular-nums}
+.ico{width:22px;height:22px;image-rendering:pixelated;vertical-align:-5px;margin-right:6px}
+.dot{display:inline-block;width:10px;height:10px;background:var(--c);margin-right:7px}
+.item{text-decoration:none}
+.item:hover{text-decoration:underline}
+.note{color:var(--muted);font-size:13px;margin:26px 0 40px}
+@media (max-width:560px){.count{margin-left:0}.terms{grid-template-columns:minmax(0,1fr)}}
+</style>
+</head>
+<body>
+<div class="tape"></div>
+<div class="wrap">
+<header>
+  <h1>사전</h1>
+  <p class="lede" id="lede"></p>
+  <nav class="links" aria-label="다른 페이지"><a href="./">기계 도감</a><a href="recipes.html">레시피 북</a></nav>
+</header>
+<div class="rail">
+  <input id="q" type="search" placeholder="용어 찾기" aria-label="용어 찾기">
+  <div id="chips" role="group" aria-label="분류" style="display:flex;flex-wrap:wrap;gap:6px"></div>
+  <span class="count" id="count"></span>
+</div>
+<main id="main"></main>
+<p class="note" id="note"></p>
+</div>
+<script>
+const $ = id => document.getElementById(id);
+let DICT, BOOK, ITEM = {}, group = "";
+const icon = id => `<img class="ico" src="img/items/${id}.png" alt="" loading="lazy">`;
+const itemLink = id => ITEM[id] ? `<a class="item" href="recipes.html#item/${id}">${icon(id)}${ITEM[id].ko}</a>` : "";
+
+function terms() {
+  const q = $("q").value.trim().toLowerCase();
+  let shown = 0;
+  const out = DICT.groups.filter(g => !group || g.id === group).map(g => {
+    const rows = g.items.filter(([t, d]) => !q || t.toLowerCase().includes(q) || d.toLowerCase().includes(q));
+    shown += rows.length;
+    if (!rows.length) return "";
+    return `<section><h2>${g.title}</h2><div class="terms">${rows.map(([t, d, s]) =>
+      `<article class="term"><h3>${t}<span class="st" data-s="${s}">${s}</span></h3><p>${d}</p></article>`).join("")}</div></section>`;
+  }).join("");
+  return [out, shown];
+}
+
+function regions() {
+  const q = $("q").value.trim().toLowerCase();
+  const rows = BOOK.regionList.filter(r => !q || r.ko.includes(q) || r.en.toLowerCase().includes(q) || (ITEM[r.special]?.ko || "").includes(q));
+  if (!rows.length) return ["", 0];
+  return [`<section><h2>지역 · ${rows.length}</h2><div class="tablewrap"><table><thead><tr><th>지역</th><th class="num">티어</th><th>특수 자원</th><th>환경 규칙</th></tr></thead><tbody>${rows.map(r =>
+    `<tr><td><span class="dot" style="--c:${r.color}"></span>${r.ko}</td><td class="num">${r.tier}</td><td>${itemLink(r.special)}</td><td>${r.rule || "없음"}</td></tr>`).join("")}</tbody></table></div></section>`, rows.length];
+}
+
+function nodes() {
+  const q = $("q").value.trim().toLowerCase();
+  const rows = BOOK.nodeList.filter(n => !q || ITEM[n.id].ko.includes(q) || n.machine.includes(q));
+  if (!rows.length) return ["", 0];
+  return [`<section><h2>자원 노드 · ${rows.length}종</h2><div class="tablewrap"><table><thead><tr><th>자원</th><th>설치 기계</th><th>손 채집</th><th class="num">불순</th><th class="num">보통</th><th class="num">순수</th><th class="num">합계</th></tr></thead><tbody>${rows.map(n =>
+    `<tr><td>${itemLink(n.id)}</td><td>${n.machine}</td><td>${n.hand ? "가능" : "불가"}</td><td class="num">${n.impure}</td><td class="num">${n.normal}</td><td class="num">${n.pure}</td><td class="num">${n.impure + n.normal + n.pure}</td></tr>`).join("")}</tbody></table></div></section>`, rows.length];
+}
+
+function fauna() {
+  const q = $("q").value.trim().toLowerCase();
+  const rows = DICT.fauna.filter(([a, b]) => !q || a.includes(q) || b.includes(q));
+  if (!rows.length) return ["", 0];
+  return [`<section><h2>동물 · ${rows.length}</h2><div class="terms">${rows.map(([a, b]) =>
+    `<article class="term"><h3>${a}</h3><p>${b}에 살아요. 쓰다듬으면 작은 선물을 남겨요.</p></article>`).join("")}</div></section>`, rows.length];
+}
+
+function render() {
+  const parts = [terms()];
+  if (!group || group === "world") parts.push(regions(), nodes(), fauna());
+  $("main").innerHTML = parts.map(p => p[0]).join("") || `<p class="note">맞는 용어가 없어요.</p>`;
+  $("count").textContent = `${parts.reduce((a, p) => a + p[1], 0)}개`;
+}
+
+function chips() {
+  const list = [["", "전체"], ...DICT.groups.map(g => [g.id, g.title]), ["world", "지역·노드·동물"]];
+  $("chips").innerHTML = list.map(([id, t]) => `<button type="button" data-id="${id}" aria-pressed="${id === group}">${t}</button>`).join("");
+  $("chips").querySelectorAll("button").forEach(b => b.onclick = () => { group = b.dataset.id; chips(); render(); });
+}
+
+async function start() {
+  [DICT, BOOK] = await Promise.all([fetch("dictionary.json").then(r => r.json()), fetch("recipes.json").then(r => r.json())]);
+  BOOK.items.forEach(x => { ITEM[x.id] = x; });
+  $("lede").textContent = "지금까지 확정된 세계관, 시스템, 지역, 자원을 모았어요. 항목마다 게임에 들어갔는지 표시했어요.";
+  $("note").textContent = `${DICT.as_of} 기준이에요. 개발 빌드(${BOOK.commit})의 수치를 썼고, 작업 중과 예정 항목은 바뀔 수 있어요.`;
+  $("q").oninput = render;
+  chips();
+  render();
+}
+start();
+</script>
+</body>
+</html>
