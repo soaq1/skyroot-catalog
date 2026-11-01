@@ -31,6 +31,8 @@ header{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:28px;a
 h1{font-family:var(--display);font-weight:400;font-size:clamp(34px,6vw,60px);line-height:1.05;margin:0 0 12px;text-wrap:balance}
 .tmp{font:500 .36em var(--body);color:var(--muted);white-space:nowrap}
 .lede{margin:0;color:var(--muted);max-width:44ch}
+.booklink{display:inline-block;margin-top:12px;font-weight:700;color:var(--ink);background:var(--hazard);color:#1b2026;padding:6px 14px;text-decoration:none}
+.booklink:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .hero{margin:0;min-width:0}
 .hero img{display:block;width:100%;aspect-ratio:16/8;object-fit:cover;object-position:50% 40%}
 .legend{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin:12px 0 0}
@@ -97,6 +99,7 @@ dialog img{display:block;width:100%;height:auto;max-height:82vh;object-fit:conta
   <div>
     <h1>Factoriature<br>기계 도감 <span class="tmp">(임시 제목)</span></h1>
     <p class="lede">공장 게임 Factoriature의 최신 모델을 모았어요. 기계 39종과 벨트·물류 12종에 화물 열차, 탈것, 이야기 구조물, 오프닝 세트까지 같은 낮 조명으로 찍었어요. 뒷면 보기 버튼으로 뒤쪽을 볼 수 있고, 사진을 누르면 앞뒤를 나란히 크게 볼 수 있어요.</p>
+    <a class="booklink" href="recipes.html">레시피 북 보기 →</a>
   </div>
   <figure class="hero"><img src="img/banner.jpg" alt="기계들을 벨트로 이어 놓은 공장 구역"></figure>
 </header>
@@ -105,7 +108,7 @@ dialog img{display:block;width:100%;height:auto;max-height:82vh;object-fit:conta
 <section class="grid" id="grid" aria-live="polite"></section>
 <section class="logi" id="logi"><h2>벨트와 물류</h2><p>어두운 리브와 흰 난간을 쓰는 지금의 벨트예요. 등급은 재질과 빛으로 구분해요.</p><figure><img loading="lazy" src="img/logi_noon.jpg" alt="벨트와 물류 블록을 깔아 놓은 시험장"></figure><div class="logigrid"><figure><img loading="lazy" src="img/logi_detail_mk1.jpg" alt="컨베이어 벨트 Mk1"><figcaption><b>컨베이어 벨트 Mk1</b>어두운 고무 리브에 흰 패널 난간, 1 m마다 노란 고정쇠.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_mk2.jpg" alt="컨베이어 벨트 Mk2"><figcaption><b>컨베이어 벨트 Mk2</b>움직이는 강철판에 호박색 빛이 난간을 따라 흘러요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_mk3.jpg" alt="루멘 부상 벨트 Mk3"><figcaption><b>루멘 부상 벨트 Mk3</b>흰 하우징 사이 어두운 채널에 청록색 빛이 흘러요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_turn.jpg" alt="곡선"><figcaption><b>곡선</b>리브가 안쪽 모서리를 따라 부채꼴로 펴져요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_ramp.jpg" alt="경사로"><figcaption><b>경사로</b>세 등급 모두 언덕을 오르내려요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_splitter.jpg" alt="분배기"><figcaption><b>분배기</b>칠한 화살표 대신 실제로 도는 팔이 출구를 가리켜요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_merger.jpg" alt="합류기"><figcaption><b>합류기</b>여러 벨트를 하나로 모아요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_filter.jpg" alt="필터 분배기"><figcaption><b>필터 분배기</b>유리 머리 안에 고른 아이템이 보여요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_lift.jpg" alt="아이템 승강기"><figcaption><b>아이템 승강기</b>유리 통로 안으로 아이템이 위층까지 올라가요.</figcaption></figure><figure><img loading="lazy" src="img/logi_close_crate.jpg" alt="보관함"><figcaption><b>보관함</b>벨트로 넣고 꺼내요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_deck_b.jpg" alt="철제 발판"><figcaption><b>철제 발판</b>H형 기둥이 받치는 2층 바닥으로, 위에 벨트를 깔아요.</figcaption></figure><figure><img loading="lazy" src="img/logi_detail_foundation_f.jpg" alt="기초"><figcaption><b>기초</b>땅을 평평하게 고르고 타일 바닥을 깔아요.</figcaption></figure></div></section>
 <section class="set" data-k="rail"><h2>화물 열차</h2><p>화물 열차와 선로 세트예요. 아직 모델만 있고 게임 기능은 없어요.</p><div class="grid"></div></section>
-<section class="set" data-k="vehicle"><h2>탈것</h2><p>게임 후반에 플레이어가 타는 탈것이에요. 흰색과 하늘색으로 맞췄고, 아직 모델만 있어요.</p><div class="grid"></div></section>
+<section class="set" data-k="vehicle"><h2>탈것</h2><p>플레이어가 지어서 타는 탈것이에요. 흰색과 하늘색으로 맞췄어요.</p><div class="grid"></div></section>
 <section class="set" data-k="story"><h2>이야기 구조물</h2><p>엔딩까지 눈앞에서 쌓아 올리는 구조물이에요. 아직 모델만 있고 게임 기능은 없어요.</p><div class="grid"></div></section>
 <section class="set" data-k="opening"><h2>오프닝 세트</h2><p>게임이 시작되는 불시착 현장이에요. 아직 모델만 있고 게임 기능은 없어요.</p><div class="grid"></div></section>
 </div>

@@ -1,0 +1,306 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Factoriature 레시피 북</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: the catalogue's spec-sheet look, split into an item index and one open recipe sheet. */
+:root{
+  --bg:#e9ecee; --panel:#fafbfb; --ink:#1b2026; --muted:#59626c; --line:#d0d6da; --chip:#e1e5e8;
+  --hazard:#f2c21c; --hazard-dark:#1b2026; --accent:#2d62c4; --hand:#c98c10;
+  --display:"Black Han Sans","IBM Plex Sans KR",system-ui,sans-serif;
+  --body:"IBM Plex Sans KR",system-ui,-apple-system,sans-serif;
+  --mono:"IBM Plex Mono",ui-monospace,Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#14171b; --panel:#1d2126; --ink:#e9edf0; --muted:#9aa4ae; --line:#30363d; --chip:#2a2f35; --hazard-dark:#14171b;
+  --accent:#6f9fee; --hand:#e6b23a}}
+:root[data-theme="dark"]{
+  --bg:#14171b; --panel:#1d2126; --ink:#e9edf0; --muted:#9aa4ae; --line:#30363d; --chip:#2a2f35; --hazard-dark:#14171b;
+  --accent:#6f9fee; --hand:#e6b23a}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55}
+a{color:inherit}
+.wrap{max-width:1240px;margin:0 auto;padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px))}
+.tape{height:12px;background:repeating-linear-gradient(135deg,var(--hazard) 0 18px,var(--hazard-dark) 18px 36px)}
+header{padding-block:28px 18px}
+h1{font-family:var(--display);font-weight:400;font-size:clamp(32px,6vw,54px);line-height:1.05;margin:0 0 10px}
+.lede{margin:0;color:var(--muted);max-width:62ch}
+.back{display:inline-block;margin-top:12px;font-weight:700;color:var(--accent);text-decoration:none}
+.back:hover{text-decoration:underline}
+.rail{position:sticky;top:env(safe-area-inset-top,0px);z-index:5;background:var(--bg);display:flex;flex-wrap:wrap;gap:8px 10px;align-items:center;padding-block:10px;border-bottom:1px solid var(--line)}
+.rail button,.seg button{font:500 13.5px var(--body);color:var(--ink);background:transparent;border:1px solid var(--line);padding:6px 12px;cursor:pointer}
+.rail button[aria-pressed="true"],.seg button[aria-pressed="true"]{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.seg{display:flex}
+.seg button+button{border-left:0}
+input,select{font:500 14px var(--body);color:var(--ink);background:var(--panel);border:1px solid var(--line);padding:7px 10px;min-width:0}
+input{flex:1 1 200px}
+:focus-visible{outline:2px solid var(--hazard);outline-offset:2px}
+.count{font-family:var(--mono);font-size:12.5px;color:var(--muted);margin-left:auto}
+.book{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:22px;padding-block:18px 40px;align-items:start}
+.list{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:6px;align-content:start}
+.it{display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--panel);border:1px solid var(--line);text-decoration:none;min-width:0}
+.it:hover{border-color:var(--muted)}
+.it[aria-current="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.it span{min-width:0;overflow-wrap:anywhere;line-height:1.25;font-size:14px}
+.it small{display:block;font-family:var(--mono);font-size:11px;color:var(--muted)}
+.ico{width:32px;height:32px;flex:none;image-rendering:pixelated}
+.sheet{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--c,var(--ink));padding:18px;position:sticky;top:70px;max-height:calc(100dvh - 86px);overflow:auto;min-width:0}
+.sheet h2{margin:0;font-size:26px;line-height:1.2}
+.title{display:flex;gap:14px;align-items:center;margin-bottom:6px}
+.title .ico{width:56px;height:56px}
+.en{font-family:var(--mono);font-size:12.5px;color:var(--muted);display:block}
+.tags{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0 2px}
+.tag{font-size:12.5px;background:var(--chip);padding:2px 8px}
+.tag.hand{background:var(--hand);color:#1b2026;font-weight:700}
+h3{font-size:13px;letter-spacing:.02em;color:var(--muted);margin:20px 0 8px;font-weight:700;border-bottom:1px solid var(--line);padding-bottom:4px}
+.rec{display:grid;grid-template-columns:minmax(0,1fr) minmax(130px,auto) minmax(0,1fr);gap:10px;align-items:center;padding:10px 0;border-bottom:1px dashed var(--line)}
+.rec:last-child{border-bottom:0}
+.side{display:flex;flex-wrap:wrap;gap:6px;min-width:0}
+.side.out{justify-content:flex-start}
+.chip{display:inline-flex;align-items:center;gap:5px;background:var(--chip);padding:3px 8px 3px 4px;text-decoration:none;font-size:13.5px;max-width:100%}
+.chip:hover{background:var(--line)}
+.chip .ico{width:22px;height:22px}
+.chip b{font-family:var(--mono);font-weight:500}
+.none{color:var(--muted);font-size:13.5px}
+.via{display:flex;align-items:center;gap:8px;text-decoration:none;min-width:0}
+.via img{width:46px;height:46px;object-fit:contain;background:var(--chip);flex:none}
+.via strong{display:block;font-size:14px;line-height:1.2}
+.via small{display:block;font-family:var(--mono);font-size:11.5px;color:var(--muted);line-height:1.3}
+.via.hand strong{color:var(--hand)}
+.totals{display:flex;flex-wrap:wrap;gap:6px}
+details summary{cursor:pointer;font-size:14px;font-weight:500;padding:4px 0}
+.tree,.tree ul{list-style:none;margin:0;padding:0}
+.tree ul{padding-left:18px;border-left:1px solid var(--line);margin-left:10px}
+.tree li{padding:3px 0}
+.tree .by{font-size:12.5px;color:var(--muted);margin-left:6px}
+.note{color:var(--muted);font-size:13px;margin:0 0 40px}
+.machines{display:grid;grid-template-columns:repeat(auto-fill,minmax(330px,1fr));gap:16px;padding-block:18px 40px}
+.card{background:var(--panel);border:1px solid var(--line);border-top:4px solid var(--ink);padding:14px;min-width:0;scroll-margin-top:76px}
+.card[data-on="true"]{border-color:var(--ink);box-shadow:inset 0 0 0 1px var(--ink)}
+.cardhead{display:flex;gap:12px;align-items:center}
+.cardhead img{width:84px;height:84px;object-fit:contain;background:var(--chip);flex:none}
+.cardhead h2{margin:0;font-size:19px;line-height:1.2}
+.spec{font-family:var(--mono);font-size:12px;color:var(--muted)}
+.mini{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;padding:6px 0;border-bottom:1px dashed var(--line);align-items:center}
+.mini:last-child{border-bottom:0}
+.mini time{font-family:var(--mono);font-size:12px;color:var(--muted);white-space:nowrap}
+.arrow{color:var(--muted);margin:0 2px}
+@media (max-width:900px){
+  .book{grid-template-columns:minmax(0,1fr)}
+  .sheet{position:static;max-height:none;order:-1;scroll-margin-top:150px}
+  .list{grid-template-columns:repeat(auto-fill,minmax(140px,1fr))}
+  .machines{grid-template-columns:minmax(0,1fr)}
+}
+@media (max-width:560px){
+  .rec{grid-template-columns:minmax(0,1fr);gap:6px}
+  .count{margin-left:0}
+}
+</style>
+</head>
+<body>
+<div class="tape"></div>
+<div class="wrap">
+<header>
+  <h1>레시피 북</h1>
+  <p class="lede" id="lede"></p>
+  <a class="back" href="./">← 기계 도감으로</a>
+</header>
+<div class="rail">
+  <div class="seg" role="group" aria-label="보기">
+    <button type="button" id="viewItems" aria-pressed="true">아이템</button>
+    <button type="button" id="viewMachines" aria-pressed="false">기계</button>
+  </div>
+  <input id="q" type="search" placeholder="이름으로 찾기" aria-label="이름으로 찾기">
+  <select id="cat" aria-label="종류"></select>
+  <select id="mach" aria-label="만드는 기계"></select>
+  <button type="button" id="hand" aria-pressed="false">손 제작만</button>
+  <span class="count" id="count"></span>
+</div>
+<main class="book" id="book">
+  <section class="list" id="list" aria-label="아이템 목록"></section>
+  <section class="sheet" id="sheet" aria-live="polite"></section>
+</main>
+<main class="machines" id="machines" hidden></main>
+<p class="note" id="note"></p>
+</div>
+<script>
+const CAT = {raw:"원자재", essence:"특수 자원", refined:"정제품", component:"지역 부품", seal:"회로 칩", common:"기본 부품", composite:"복합 부품", byproduct:"부산물"};
+const STATION = {furnace:"화로", workbench:"작업대"};
+const $ = id => document.getElementById(id);
+let D, I = {}, M = {}, byOut = {}, byIn = {}, costOf = {}, stageOf = {}, gather = new Set();
+let view = "items", selected = "iron_gear", selectedMachine = "";
+
+const fmt = n => String(Math.round(n * 100) / 100);
+const sec = t => fmt(t) + "초";
+const perMin = (n, t) => fmt(n * 60 / t);
+const icon = id => `<img class="ico" src="img/items/${id}.png" alt="" loading="lazy">`;
+const chip = (id, n) => `<a class="chip" href="#item/${id}">${icon(id)}<span>${I[id].ko}</span>${n != null ? `<b>×${fmt(n)}</b>` : ""}</a>`;
+const chips = rows => rows.map(([id, n]) => chip(id, n)).join("");
+const photo = m => m.photo ? `<img src="img/${m.photo}.jpg" alt="" loading="lazy">` : "";
+const unlockText = m => m.unlock < 0 ? "처음부터" : `공사 ${m.unlock}단계 완료 후`;
+
+function index() {
+  D.items.forEach(x => { I[x.id] = x; byOut[x.id] = []; byIn[x.id] = []; costOf[x.id] = []; stageOf[x.id] = []; });
+  D.machines.forEach(m => { M[m.id] = m; m.cost.forEach(([id, n]) => costOf[id] && costOf[id].push([m, n])); });
+  D.recipes.forEach(r => {
+    r.out.forEach(([id]) => byOut[id].push(r));
+    r.in.forEach(([id]) => byIn[id].push(r));
+  });
+  D.stages.forEach(s => s.deliver.forEach(([id, n]) => stageOf[id].push([s, n])));
+  gather = new Set(D.gather);
+}
+
+const isHand = id => byOut[id].some(r => r.hand);
+
+function matches(x) {
+  const q = $("q").value.trim().toLowerCase();
+  if (q && !x.ko.toLowerCase().includes(q) && !x.en.toLowerCase().includes(q)) return false;
+  if ($("cat").value && x.category !== $("cat").value) return false;
+  if ($("mach").value && !byOut[x.id].some(r => r.m === $("mach").value)) return false;
+  if ($("hand").getAttribute("aria-pressed") === "true" && !isHand(x.id)) return false;
+  return true;
+}
+
+function renderList() {
+  const rows = D.items.filter(matches).sort((a, b) => a.tier - b.tier || a.ko.localeCompare(b.ko, "ko"));
+  $("count").textContent = view === "items" ? `${rows.length}개` : "";
+  $("list").innerHTML = rows.length ? rows.map(x =>
+    `<a class="it" href="#item/${x.id}" aria-current="${x.id === selected}">${icon(x.id)}<span>${x.ko}<small>${CAT[x.category]} · T${x.tier}</small></span></a>`
+  ).join("") : `<p class="none">맞는 아이템이 없어요.</p>`;
+}
+
+function recipeRow(r, id) {
+  const m = M[r.m];
+  const out = r.out.find(o => o[0] === id) || r.out[0];
+  const rows = [];
+  if (r.hand) {
+    const s = M[r.hand];
+    rows.push(`<div class="rec"><div class="side">${chips(r.in)}</div>
+      <a class="via hand" href="#machine/${r.hand}">${photo(s)}<span><strong>${s.ko} · 손 제작</strong><small>${sec(r.t * D.handFactor)} · 6 m 안</small></span></a>
+      <div class="side out">${chips(r.out)}</div></div>`);
+  }
+  const from = r.in.length ? chips(r.in) : `<span class="none">자원 노드 위에 설치</span>`;
+  rows.push(`<div class="rec"><div class="side">${from}</div>
+    <a class="via" href="#machine/${r.m}">${photo(m)}<span><strong>${m.ko}</strong><small>${sec(r.t)} · 분당 ${perMin(out[1], r.t)}개</small></span></a>
+    <div class="side out">${chips(r.out)}</div></div>`);
+  return rows.join("");
+}
+
+/* The tree follows each item's first recipe; a loop stops at the item that repeats. */
+function tree(id, need, path) {
+  const r = byOut[id].find(x => x.in.length);
+  if (!r || path.includes(id)) return {id, need, kids: []};
+  const made = r.out.find(o => o[0] === id)[1];
+  return {id, need, r, kids: r.in.map(([k, n]) => tree(k, n * need / made, [...path, id]))};
+}
+function leaves(node, sum) {
+  if (!node.kids.length) sum[node.id] = (sum[node.id] || 0) + node.need;
+  node.kids.forEach(k => leaves(k, sum));
+  return sum;
+}
+const treeHtml = node => `<li>${chip(node.id, node.need)}${node.r ? `<span class="by">${M[node.r.m].ko}</span>` : ""}${node.kids.length ? `<ul>${node.kids.map(treeHtml).join("")}</ul>` : ""}</li>`;
+
+function renderSheet() {
+  const x = I[selected];
+  if (!x) return;
+  $("sheet").style.setProperty("--c", x.color);
+  const regions = (x.origin || []).map(r => D.regions[r] || r);
+  const tags = [`<span class="tag">${CAT[x.category]}</span>`, `<span class="tag">티어 ${x.tier}</span>`];
+  if (isHand(x.id)) tags.push(`<span class="tag hand">손으로 만들 수 있어요</span>`);
+  if (gather.has(x.id)) tags.push(`<span class="tag hand">손으로 캘 수 있어요</span>`);
+  regions.forEach(r => tags.push(`<span class="tag">${r}</span>`));
+  const t = tree(x.id, 1, []);
+  const sum = Object.entries(leaves(t, {}));
+  const used = byIn[x.id];
+  const parts = [`<div class="title">${icon(x.id)}<div><h2>${x.ko}</h2><span class="en">${x.en}</span></div></div><div class="tags">${tags.join("")}</div>`];
+  parts.push(`<h3>만드는 법</h3>${byOut[x.id].map(r => recipeRow(r, x.id)).join("")}`);
+  if (t.kids.length) {
+    parts.push(`<h3>1개에 드는 원재료</h3><div class="totals">${chips(sum)}</div>
+      <details ${t.kids.length && JSON.stringify(t).length < 1800 ? "open" : ""}><summary>재료 나무 보기</summary><ul class="tree">${treeHtml(t)}</ul></details>`);
+  }
+  parts.push(`<h3>재료로 쓰이는 곳 · ${used.length}</h3>`);
+  parts.push(used.length ? used.map(r => `<div class="mini"><div class="side">${chips(r.in)}<span class="arrow">→</span>${chips(r.out)}</div><a class="spec" href="#machine/${r.m}">${M[r.m].ko}</a></div>`).join("") : `<p class="none">다른 아이템의 재료로는 쓰이지 않아요.</p>`);
+  if (costOf[x.id].length) {
+    parts.push(`<h3>이걸로 짓는 건물 · ${costOf[x.id].length}</h3><div class="side">${costOf[x.id].map(([m, n]) => `<a class="chip" href="#machine/${m.id}"><span>${m.ko}</span><b>×${n}</b></a>`).join("")}</div>`);
+  }
+  if (stageOf[x.id].length) {
+    parts.push(`<h3>송신기 공사</h3><div class="side">${stageOf[x.id].map(([s, n]) => `<span class="chip"><span>${s.n}단계 · ${s.ko}</span><b>×${n}</b></span>`).join("")}</div>`);
+  }
+  $("sheet").innerHTML = parts.join("");
+  $("sheet").scrollTop = 0;
+}
+
+function renderMachines() {
+  const q = $("q").value.trim().toLowerCase();
+  const rows = D.machines.filter(m => {
+    const own = D.recipes.filter(r => r.m === m.id || r.hand === m.id);
+    if (!own.length) return false;
+    if ($("hand").getAttribute("aria-pressed") === "true" && !STATION[m.id]) return false;
+    return !q || m.ko.toLowerCase().includes(q) || m.en.toLowerCase().includes(q);
+  });
+  $("count").textContent = `${rows.length}종`;
+  $("machines").innerHTML = rows.map(m => {
+    const hand = !!STATION[m.id];
+    const own = D.recipes.filter(r => hand ? r.hand === m.id : r.m === m.id);
+    const spec = [`${m.size[0]}×${m.size[1]}칸`, m.power ? `전력 ${m.power}` : "전력 없음", unlockText(m)].join(" · ");
+    return `<article class="card" id="m-${m.id}" data-on="${m.id === selectedMachine}">
+      <div class="cardhead">${photo(m)}<div><h2>${m.ko}</h2><span class="en">${m.en}</span><div class="spec">${spec}</div></div></div>
+      <h3>짓는 데 드는 재료</h3><div class="side">${chips(m.cost)}</div>
+      <h3>${hand ? "손으로 만드는 것" : "만드는 것"} · ${own.length}</h3>
+      ${own.map(r => `<div class="mini"><div class="side">${chips(r.in)}${r.in.length ? `<span class="arrow">→</span>` : ""}${chips(r.out)}</div><time>${sec(hand ? r.t * D.handFactor : r.t)}</time></div>`).join("")}
+    </article>`;
+  }).join("") || `<p class="none">맞는 기계가 없어요.</p>`;
+}
+
+function show() {
+  $("book").hidden = view !== "items";
+  $("machines").hidden = view !== "machines";
+  $("viewItems").setAttribute("aria-pressed", view === "items");
+  $("viewMachines").setAttribute("aria-pressed", view === "machines");
+  $("cat").hidden = $("mach").hidden = view !== "items";
+  if (view === "items") { renderList(); renderSheet(); } else renderMachines();
+}
+
+function route() {
+  const [kind, id] = decodeURIComponent(location.hash.slice(1)).split("/");
+  if (kind === "machine" && M[id]) {
+    view = "machines"; selectedMachine = id;
+    $("q").value = ""; show();
+    const card = $("m-" + id);
+    if (card) card.scrollIntoView({block: "start"});
+    return;
+  }
+  if (kind === "item" && I[id]) { selected = id; view = "items"; show();
+    if (matchMedia("(max-width:900px)").matches) $("sheet").scrollIntoView({block: "start"});
+    return; }
+  show();
+}
+
+function press(b) { b.setAttribute("aria-pressed", b.getAttribute("aria-pressed") !== "true"); show(); }
+
+async function start() {
+  D = await (await fetch("recipes.json")).json();
+  index();
+  const handCount = D.recipes.filter(r => r.hand).length;
+  $("lede").textContent = `아이템 ${D.items.length}종을 어떤 기계로, 어떤 재료로 만드는지 정리했어요. 재료를 누르면 그 재료의 만드는 법으로 넘어가요. 손 제작 레시피는 ${handCount}개예요.`;
+  $("note").textContent = `지금 개발 빌드(${D.commit}) 기준이에요. 수량과 시간은 아직 바뀔 수 있고, 아이템 흐름 개편안은 반영 전이에요. 화로 사진은 임시로 가마 모델이에요.`;
+  $("cat").innerHTML = `<option value="">모든 종류</option>` + Object.entries(CAT).map(([k, v]) => `<option value="${k}">${v}</option>`).join("");
+  const makers = [...new Set(D.recipes.map(r => r.m))].map(id => M[id]).sort((a, b) => a.ko.localeCompare(b.ko, "ko"));
+  $("mach").innerHTML = `<option value="">모든 기계</option>` + makers.map(m => `<option value="${m.id}">${m.ko}</option>`).join("");
+  $("q").oninput = show;
+  $("cat").onchange = $("mach").onchange = show;
+  $("hand").onclick = e => press(e.currentTarget);
+  $("viewItems").onclick = () => { view = "items"; show(); };
+  $("viewMachines").onclick = () => { view = "machines"; selectedMachine = ""; show(); };
+  addEventListener("hashchange", route);
+  route();
+}
+start();
+</script>
+</body>
+</html>
